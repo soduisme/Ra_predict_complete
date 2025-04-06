@@ -34,27 +34,18 @@ def load_and_train_model():
     X_scaled = scaler.fit_transform(X)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-param_grid = {
-'hidden_layer_sizes': [(5,), (10,), (20,), (30,), (50,), (10, 10), (20, 10), (30, 20), (50, 30, 20)],
-'learning_rate_init': [0.01, 0.005, 0.001, 0.0005],
-'activation': ['relu', 'tanh']
-}
-
-grid_search = GridSearchCV(
-    estimator=MLPRegressor(max_iter=5000, early_stopping=True, random_state=42),
-    param_grid=param_grid,
-    cv=3,
-    scoring='r2',
-    verbose=2,
-    n_jobs=-1,
-    return_train_score=True
-)
-
-grid_search.fit(X_train, y_train)
+    param_grid = {
+        'hidden_layer_sizes': [(10,), (30,), (50,), (20, 10)],
+        'learning_rate_init': [0.001, 0.005],
+        'activation': ['relu']
+    }
+    grid = GridSearchCV(MLPRegressor(max_iter=5000, early_stopping=True, random_state=42),
+                        param_grid, cv=3, scoring='r2', n_jobs=-1, return_train_score=True)
+    grid.fit(X_train, y_train)
     model = grid.best_estimator_
-    return df, scaler, model, X_test, y_test, X_train, y_train
-
-df, scaler, model, X_test, y_test, X_train, y_train = load_and_train_model()
+    results_df = pd.DataFrame(grid.cv_results_)
+    return df, scaler, model, X_test, y_test, X_train, y_train, results_df, param_grid
+df, scaler, model, X_test, y_test, X_train, y_train, results_df, param_grid = load_and_train_model()
 
 tab1, tab2, tab3 = st.tabs(["\U0001F4CA Данные и графики", "\U0001F50D Обратный поиск по Ra", "\U0001F4C8 Прогноз Ra"])
 
