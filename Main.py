@@ -19,7 +19,7 @@ from scipy.interpolate import griddata
 import joblib
 
 st.set_page_config(page_title="Прогноз шероховатости Ra", layout="wide")
-st.title("Прогноз значения Ra по технологическим параметрам и обратный поиск параметров по желаемому Ra при торцевом фрезеровании заготовок из стали 20")
+st.title("Прогноз шероховатости Ra и обратный поиск параметров по желаемому Ra при фрезеровании стали 20")
 st.markdown("""
 **Создатель**: Нгуен Нгок Шон - МТ3/МГТУ им. Баумана
 
@@ -35,9 +35,9 @@ def load_and_train_model():
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
     param_grid = {
-        'hidden_layer_sizes': [(10,), (30,), (50,), (20, 10)],
-        'learning_rate_init': [0.001, 0.005],
-        'activation': ['relu']
+        'hidden_layer_sizes': [(30, 20)],
+        'learning_rate_init': [0.0005],
+        'activation': ['tanh']
     }
     grid = GridSearchCV(MLPRegressor(max_iter=5000, early_stopping=True, random_state=42),
                         param_grid, cv=3, scoring='r2', n_jobs=-1, return_train_score=True)
