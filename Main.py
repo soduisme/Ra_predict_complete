@@ -27,31 +27,25 @@ st.markdown("""
 """)
 @st.cache_data
 def load_and_train_model():
-    try:
-        df = pd.read_excel("du_lieu_frezing.xlsx")
-        X = df[['V', 'S', 't']]
-        y = df['Ra']
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    df = pd.read_excel("du_lieu_frezing.xlsx")
+    X = df[['V', 'S', 't']]
+    y = df['Ra']
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-        param_grid = {
-            'hidden_layer_sizes': [(10,), (30,), (50,), (20, 10)],
-            'learning_rate_init': [0.001, 0.005],
-            'activation': ['relu']
-        }
-        grid = GridSearchCV(
-            MLPRegressor(max_iter=5000, early_stopping=True, random_state=42),
-            param_grid, cv=3, scoring='r2', n_jobs=-1
-        )
-        grid.fit(X_train, y_train)
-        model = grid.best_estimator_
-        return df, scaler, model, X_test, y_test, X_train, y_train
-    except Exception as e:
-        st.error(f"Ошибка при загрузке модели или данных: {e}")
-        return None, None, None, None, None, None, None
-        
-        df, scaler, model, X_test, y_test, X_train, y_train = load_and_train_model()
+    param_grid = {
+        'hidden_layer_sizes': [(10,), (30,), (50,), (20, 10)],
+        'learning_rate_init': [0.001, 0.005],
+        'activation': ['relu']
+    }
+    grid = GridSearchCV(MLPRegressor(max_iter=5000, early_stopping=True, random_state=42),
+                        param_grid, cv=3, scoring='r2', n_jobs=-1)
+    grid.fit(X_train, y_train)
+    model = grid.best_estimator_
+    return df, scaler, model, X_test, y_test, X_train, y_train
+
+df, scaler, model, X_test, y_test, X_train, y_train = load_and_train_model()
 
 tab1, tab2, tab3 = st.tabs(["\U0001F4CA Данные и графики", "\U0001F50D Обратный поиск по Ra", "\U0001F4C8 Прогноз Ra"])
 
