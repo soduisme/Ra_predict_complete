@@ -52,8 +52,6 @@ def load_and_train_model():
         return None, None, None, None, None, None, None
         
         df, scaler, model, X_test, y_test, X_train, y_train = load_and_train_model()
-if df is None:
-    st.stop()
 
 tab1, tab2, tab3 = st.tabs(["\U0001F4CA Данные и графики", "\U0001F50D Обратный поиск по Ra", "\U0001F4C8 Прогноз Ra"])
 
