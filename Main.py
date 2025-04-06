@@ -29,24 +29,17 @@ st.markdown("""
 @st.cache_data
 def load_and_train_model():
     df = pd.read_excel('du_lieu_frezing.xlsx')
-except Exception as e:
-    raise FileNotFoundError(f"Не удалось прочитать файл Excel: {e}")
 
-# Проверка формата данных
-required_columns = {'V', 'S', 't', 'Ra'}
-if not required_columns.issubset(df.columns):
-    raise ValueError(f"Файл Excel должен содержать следующие столбцы: {required_columns}")
-
-# Разделение входных и выходных данных
-X = df[['V', 'S', 't']]
-y = df['Ra']
-
-# Нормализация данных
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# Разделение на обучающую и тестовую выборки
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    # Разделение входных и выходных данных
+    X = df[['V', 'S', 't']]
+    y = df['Ra']
+    
+    # Нормализация данных
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    # Разделение на обучающую и тестовую выборки
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
     param_grid = {
         'hidden_layer_sizes': [(30, 20)],
