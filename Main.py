@@ -36,7 +36,7 @@ def load_and_train_model():
 
     param_grid = {
         'hidden_layer_sizes': [(30, 20)],
-        'learning_rate_init': [0.005],
+        'learning_rate_init': [0.0005],
         'activation': ['tanh']
     }
     grid = GridSearchCV(MLPRegressor(max_iter=5000, early_stopping=True, random_state=42),
