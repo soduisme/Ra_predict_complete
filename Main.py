@@ -19,22 +19,16 @@ from scipy.interpolate import griddata
 import joblib
 
 st.set_page_config(page_title="Прогноз шероховатости Ra", layout="wide")
-st.title("Приложение: Прогноз и анализ шероховатости поверхности Ra при торцевом фрезеровании заготовок из стали 20")
+st.title("Прогноз значения Ra по технологическим параметрам и обратный поиск параметров по желаемому Ra при торцевом фрезеровании заготовок из стали 20")
 st.markdown("""
 **Создатель**: Нгуен Нгок Шон - МТ3/МГТУ им. Баумана
-
-**Цель**: Прогноз значения Ra по технологическим параметрам и обратный поиск параметров по желаемому Ra при торцевом фрезеровании заготовок из стали 20.
 
 **Инструмент**: Торцевая фреза BAP300R-40-22 (D=40 мм, зубьев), пластины APMT1135PDER-M2 OP1215.
 """)
 
 @st.cache_data
 def load_and_train_model():
-   # Чтение данных из Excel файла
-file_path = 'du_lieu_frezing.xlsx'
-
-try:
-    df = pd.read_excel(file_path)
+    df = pd.read_excel('du_lieu_frezing.xlsx')
 except Exception as e:
     raise FileNotFoundError(f"Не удалось прочитать файл Excel: {e}")
 
