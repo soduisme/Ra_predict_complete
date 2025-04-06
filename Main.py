@@ -30,15 +30,32 @@ st.markdown("""
 
 @st.cache_data
 def load_and_train_model():
-    df = pd.read_excel("du_lieu_frezing.xlsx")
-    X = df[['V', 'S', 't']]
-    y = df['Ra']
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+   # Чтение данных из Excel файла
+file_path = 'du_lieu_frezing.xlsx'
+
+try:
+    df = pd.read_excel(file_path)
+except Exception as e:
+    raise FileNotFoundError(f"Не удалось прочитать файл Excel: {e}")
+
+# Проверка формата данных
+required_columns = {'V', 'S', 't', 'Ra'}
+if not required_columns.issubset(df.columns):
+    raise ValueError(f"Файл Excel должен содержать следующие столбцы: {required_columns}")
+
+# Разделение входных и выходных данных
+X = df[['V', 'S', 't']]
+y = df['Ra']
+
+# Нормализация данных
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Разделение на обучающую и тестовую выборки
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
     param_grid = {
-        'hidden_layer_sizes': [(10,), (30,), (50,), (30, 20)],
+        'hidden_layer_sizes': [(30, 20)],
         'learning_rate_init': [0.005],
         'activation': ['tanh']
     }
